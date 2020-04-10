@@ -6,8 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Channel extends Model
 {
-    public function thread()
+    public function threads()
     {
-        $this->hasMany('App\Thread');
+        return $this->hasMany('App\Thread');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+
 }
