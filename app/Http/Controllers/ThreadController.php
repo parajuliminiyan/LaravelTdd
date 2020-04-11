@@ -25,7 +25,7 @@ class ThreadController extends Controller
     {
         if ($channel->exists) {
             $threads = $channel->threads()->latest()->get();
-        } else {
+         } else {
 
             $threads = Thread::latest()->get();
         }
@@ -42,18 +42,19 @@ class ThreadController extends Controller
         return view('threads.create');
     }
 
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
         $this->validate($request, [
             'title' => 'required',
             'body' => 'required',
-            'channel_id' => 'required|exists:channels,id '
+            'channel_id' => 'required|exists:channels,id'
         ]);
         $thread = Thread::create([
             'user_id' => auth()->id(),

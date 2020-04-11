@@ -52,13 +52,13 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
 
-        $this->publishThread(['channel_id' => 1])
+        $this->publishThread(['channel_id' => 999])
             ->assertSessionHasErrors('channel_id');
     }
 
     public function publishThread($overrides = [])
     {
-        $this->signIn();
+        $this->withExceptionHandling()->signIn();
         $thread = make('App\Thread', $overrides);
         return $this->post('/threads', $thread->toArray());
 

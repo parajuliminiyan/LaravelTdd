@@ -13,7 +13,8 @@ class ParticipateInForumTest extends TestCase
     public function unauthenticated_user_may_not_add_replies()
     {
 
-        $this->post('threads/channel/1/replies', [])
+        $this->withExceptionHandling()
+            ->post('threads/channel/1/replies', [])
             ->assertRedirect('/login');
 
 
@@ -38,7 +39,7 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function a_reply_requires_a_body()
     {
-        $this->signIn();
+        $this->withExceptionHandling()->signIn();
         $thread = create('App\Thread');
 
         $reply = make('App\Reply', ['body' => null]);
