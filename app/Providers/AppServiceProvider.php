@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Channel;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 
     /**
@@ -23,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //       ------------ Sharing Variables toCertain View
+//        \View::composer('threads.create',function($view) {
+//           $view->with('channels',\App\Channel::all());
+//        });
+        //--------------- To all Views-------
+        View::share('channels', Channel::all());
     }
 }
