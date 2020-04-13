@@ -26,10 +26,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //       ------------ Sharing Variables toCertain View
-//        \View::composer('threads.create',function($view) {
-//           $view->with('channels',\App\Channel::all());
-//        });
+        \View::composer('*',function($view) {
+           $view->with('channels',\App\Channel::all());
+        });
         //--------------- To all Views-------
-        View::share('channels', Channel::all());
+//        View::share('channels', Channel::all());
     }
 }
