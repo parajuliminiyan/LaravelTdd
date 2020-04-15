@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadFilters;
 use App\Thread;
 use App\User;
 use Illuminate\Http\Request;
@@ -20,21 +21,14 @@ class ThreadController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Channel $channel
+     * @param ThreadFilters $filters
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Channel $channel)
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-        if ($channel->exists) {
-            $threads = $channel->threads()->latest();
-         } else {
+        $threads = $this->getTheads($filters, $channel);
 
-            $threads = Thread::latest();
-        }
-        if($username = request('by')){
-            $user = User::where('name', $username)->firstOrFail();
-            $threads->where('user_id',$user->id);
-        }
-        $threads = $threads->get();
         return view('threads.index', compact('threads'));
     }
 
@@ -48,7 +42,7 @@ class ThreadController extends Controller
         return view('threads.create');
     }
 
-     /**
+    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -114,5 +108,21 @@ class ThreadController extends Controller
     public function destroy(Thread $thread)
     {
         //
+    }
+
+    /**
+     * @param ThreadFilters $filters
+     * @param Channel $channel
+     * @return mixed
+     */
+    protected function getTheads(ThreadFilters $filters, Channel $channel)
+    {
+        $threads = Thread::latest()->filter($filters);
+        if ($channel->exists) {
+            $threads->where('channel_id', $channel->id);
+        }
+
+        $threads = $threads->get();
+        return $threads;
     }
 }
