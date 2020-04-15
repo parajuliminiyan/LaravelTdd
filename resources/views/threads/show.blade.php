@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="row  justify-content-center ">
+        <div class="row">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
@@ -12,22 +12,16 @@
                         {{$thread->body}}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row  justify-content-center">
-            <div class="col-md-8"><br>
-                <h4 class="text-center text-success">Replies</h4>
-                @foreach($thread->replies as $reply)
+                <br>
+                @foreach($replies as $reply)
                     @include('threads.reply')
                 @endforeach
-            </div>
-        </div>
-        @guest()
-            <p class="text-center">Please <a href="{{route('login')}}">Sign In</a> To Participate in The Forum</p>
-        @endguest
-        @auth()
-            <div class="row  justify-content-center ">
-                <div class="col-md-8"><br>
+                {{$replies->links()}}
+                @guest()
+                    <p class="text-center">Please <a href="{{route('login')}}">Sign In</a> To Participate in The Forum
+                    </p>
+                @endguest
+                @auth()
                     <form action="{{$thread->path().'/replies'}}" method="POST">
                         @csrf
                         <div class="form-group">
@@ -36,8 +30,19 @@
                         </div>
                         <button type="submit" class="btn btn-default">Submit</button>
                     </form>
+                @endauth
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>
+                            This Thread was created {{$thread->created_at->diffForHumans()}}
+                            By <a href="#">{{$thread->creator->name}}</a>
+                            and has {{$thread->replies_count}} {{Str::plural('Comment',$thread->replies_count )}}
+                        </p>
+                    </div>
                 </div>
             </div>
-        @endauth
+        </div>
     </div>
 @endsection
