@@ -18,6 +18,16 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        body {padding-bottom: 100px}
+        .level {
+            display: flex;
+            align-items: center ;
+        }
+        .flex {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -45,6 +55,7 @@
                             @auth()
                             <a class="nav-link" href="/threads?by={{auth()->user()->name}}">My Threads</a>
                             @endauth
+                            <a class="nav-link" href="/threads?popular=1">Popular Threads</a>
                         </div>
                     </li>
                     <li class="nav-item">

@@ -68,11 +68,26 @@ class ReadThreadsTest extends TestCase
     /** @test */
     public function a_user_can_filter_threads_by_any_username()
     {
-        $this->signIn(create('App\User',['name' => 'Miniyan']));
-        $threadByMiniyan = create('App\Thread',['user_id' => auth()->id() ]);
+        $this->signIn(create('App\User', ['name' => 'Miniyan']));
+        $threadByMiniyan = create('App\Thread', ['user_id' => auth()->id()]);
         $threadNotByMiniyan = create('App\Thread');
         $this->get('/threads?by=Miniyan')
             ->assertSee($threadByMiniyan->title)
             ->assertDontSee($threadNotByMiniyan->title);
+    }
+
+    /** @test */
+    public function a_can_filter_threads_by_popularity()
+    {
+        $threadwithTwoReply = create('App\Thread');
+        create('App\Reply',['thread_id' => $threadwithTwoReply->id],2);
+
+        $threadwithThreeReply = create('App\Thread');
+        create('App\Reply',['thread_id' => $threadwithThreeReply->id],3);
+
+        $threadWithNoReplies = $this->thread;
+
+        $response = $this->getJson('threads?popular=1')->json();
+        $this->assertEquals([3,2,0],array_column($response,'replies_count'));
     }
 }
